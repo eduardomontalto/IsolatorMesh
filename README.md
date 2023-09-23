@@ -1,3 +1,3 @@
 # IsolatorMesh 
 
-This is a package to generate 2D and 3D meshes for finite element analysis of elastomeric bearings.
+This is a package to generate 2D and 3D meshes for finite element analysis of elastomeric bearings. The package allows for structured meshes using quadrilateral elements in 2D or hexahedral elements in 3D, as well as unstructured meshes using triangular elements in 2D or tetrahedral elements in 3D; unstructured meshes are generated using the DistMesh algorithm by Dr. Per-Olof Persson.
