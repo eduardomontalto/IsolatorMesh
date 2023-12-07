@@ -70,3 +70,46 @@ function quad(w::Float64,
     end
     return p, t
 end
+
+function quad(w::Float64, 
+    h::Float64,
+    ny::Int,
+    er::Float64;
+    x0::Float64=0.,
+    y0::Float64=0.,
+    varsize::Bool=true)::Tuple{Matrix{Float64},Matrix{Int}}
+
+    xleft = 0.
+    xright = 1.
+    if varsize
+        xξleft = 1/er
+        xξright = 1/er
+    else
+        xξleft = 1
+        xξright = 1
+    end
+    H(ξ) = [(1 + 2*ξ)*(1 - ξ)^2,(1 - 2*(ξ - 1))*ξ^2,ξ*(1 - ξ)^2,(ξ - 1)*ξ^2]
+    xint(ξ) = [xleft,xright,xξleft,xξright]'*H(ξ)
+    nx = round(Int,w/h*ny/er) 
+    ξ = 1/nx*collect(0:nx)
+    x = w*xint.(ξ) .+ x0
+    dy = h*1/ny
+    y = dy*collect(0:ny) .+ y0
+    x = x*ones(ny+1)'
+    y = ones(nx+1)*y'
+    nn = (nx+1)*(ny+1)
+    p = [reshape(x,nn) reshape(y,nn)]
+    nel = nx*ny
+    t = Matrix{Int}(undef,nel,4)
+    iel = 1
+    n1 = 1
+    for j=1:ny
+        for i=1:nx
+            t[iel,:] = [n1,n1+1,n1+nx+2,n1+nx+1] 
+            iel += 1
+            n1 += 1
+        end
+        n1 += 1
+    end
+    return p, t
+end
